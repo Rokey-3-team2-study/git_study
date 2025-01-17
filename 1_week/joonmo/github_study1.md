@@ -378,5 +378,138 @@ $ git remote rename CURRENT_NAME NEW_NAME
 $ git remote remove NAME
 ```
 
-## 3. Git Branch
+# 3. Git Branch
 
+## 3.1 Branch concepts
+
+### 3.1.1 Branch 
+
+- 코드의 독립적인 작업 공간 -> test & modify 용이
+- 가볍고 빠름 (commit을 가리키는 pointer -> pointer를 하나 추가하는 작업)
+- 쉬운 Merge
+
+### 3.1.2 example
+``` bash
+# branch 생성
+$ git branch NAME
+# branch 이동 (포인터 이동)
+$ git checkout NAME
+# branch 병합
+$ git merge NAME
+# branch 삭제
+$ git branch -d NAME
+```
+
+## 3.2 Branch Merge
+
+### 3.2.1 Branch Merge method
+
+#### - Fast-forward
+
+- branch가 직접 연결된 상태
+- 단순히 branch pointer -> recent commit
+
+#### - 3-way Merge
+
+- branch가 다른 경로로 작업 된 경우
+- 공통 branch를 사용해 Merge 후 delete
+``` 
+master -- A -- B -- C
+         \
+          D -- E
+```
+
+### 3.2.2 Conflict
+
+- Merge하는 두 branch에서 같은 파일 동시 수정시 conflict
+``` bash
+# confilct message
+Auto-merging index.html
+CONFLICT (content): Merge conflict in index.html
+Automatic merge failed; fix conflicts and then commit the result.
+```
+- git status -> unmerged file 수동 해결
+
+## 3.3 Remote Branch
+
+### 3.3.1 Remote vs Local
+
+> Remote branch : Remote Repository branch
+>                 romote-tracking branch - local pointer
+
+1. remote branch
+   - remote repository 존재
+   - 협업 시 여러 사용자 공유
+
+2. remote tracking branch
+   - local 의 remote branch 추적
+   - remote repository 마지막 업데이트 기록
+   - 수정 X
+  
+3. Local branch
+   - local 환경
+   - Push 하지 않으면 공유 X
+
+### 3.3.2 Remote branch use
+
+#### - Remote branch status
+``` bash
+# remote rapository all branch
+$ git branch -r
+  origin/HEAD -> origin/main
+  origin/hojun
+  origin/joonmoHan
+  origin/main
+# remote & local branch staus
+$ git branch -vv
+* joonmoHan 6b1f781 [origin/joonmoHan] docs before branch
+  main      b66de51 [origin/main] Update README.md
+```
+
+#### - Rmote data fetch
+``` bash
+$ git fetch origin
+remote: Enumerating objects: 39, done.
+remote: Counting objects: 100% (39/39), done.
+remote: Compressing objects: 100% (28/28), done.
+remote: Total 37 (delta 10), reused 22 (delta 4), pack-reused 0 (from 0)
+Unpacking objects: 100% (37/37), 6.93 KiB | 56.00 KiB/s, done.
+From https://github.com/Rokey-3-team2-study/git_study
+ * [new branch]      donghoon   -> origin/donghoon
+   b66de51..c3676a6  main       -> origin/main
+ * [new branch]      seokhwan   -> origin/seokhwan
+ * [new branch]      yeunho     -> origin/yeunho
+
+$ git branch -r
+  origin/HEAD -> origin/main
+  origin/donghoon
+  origin/hojun
+  origin/joonmoHan
+  origin/main
+  origin/seokhwan
+  origin/yeunho
+```
+
+#### - Remote branch Pull
+
+``` bash
+# pull = fetch + merge
+$ git pull origin master
+```
+
+#### - Remote branch Push & delete
+
+``` bash
+git push <remote> <branch>
+git push <remote> --delete <branch>
+```
+
+#### - branch tracking
+
+
+``` bash
+# 자동으로 local branch가 remote 추적
+git checkout --track <remote>/<branch>
+# 기존 loacal branch를 remote 연결
+git branch --set-upstream-to=<remote>/<branch> <local-branch>
+```
